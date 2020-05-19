@@ -32,9 +32,8 @@ class DataAnalyzer:
         
         data_frame = pandas.DataFrame(multiple_series)
         data_frame.plot(x=x_name, y=y_name, kind='bar',title=title)
+
+
+    @classmethod
+    def run_analyzed_data_charts(cls):
         plot.show()
-
-
-    # @classmethod
-    # def run_analyzed_data_charts(cls):
-    #     plot.show()
