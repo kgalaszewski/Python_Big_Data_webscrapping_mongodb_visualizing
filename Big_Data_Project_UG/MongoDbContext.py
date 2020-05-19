@@ -4,7 +4,7 @@ from typing import List
 from AppSettings import AppSettings
 
 
-class DBContextTempName:  # TODO change name so that its context like DonkeyDb
+class DBContext:
     def __init__(self,
                 mongo_hostname: str = AppSettings.MONGO_HOSTNAME,
                 mongo_port: int = AppSettings.MONGO_PORT,
@@ -15,15 +15,9 @@ class DBContextTempName:  # TODO change name so that its context like DonkeyDb
         self.__db = self.__client[mongo_clustername]
         self.__collection = None
 
-    # TODO move to the end ? its a private method
-    def __initialize_collection(self, collection_name: str = AppSettings.COLLECTION_NAME):
-        if self.__collection is None:
-            print(f'Initializing the collection in DB. Collection name={collection_name}')
-            self.__collection = self.__db[collection_name]
 
-
-    def add_tempnames(self, rows: list): # TODO change name to something like add_donkey
-        self.__initialize_collection()
+    def add_rows(self, rows: list, collection_name: str):
+        self.__initialize_collection(collection_name)
 
         if rows:
             try:
@@ -33,8 +27,8 @@ class DBContextTempName:  # TODO change name so that its context like DonkeyDb
                 print(f'Could not insert rows due to : {str(ex)}')
 
 
-    def add_onetempname(self, row): # TODO name
-        self.__initialize_collection()
+    def add_row(self, row, collection_name: str):
+        self.__initialize_collection(collection_name)
 
         if row:
             print('Adding new row')
@@ -43,9 +37,8 @@ class DBContextTempName:  # TODO change name so that its context like DonkeyDb
             except Exception as ex:
                 print(f'Could not insert row due to : {str(ex)}')
 
-        
-    def get_by_Id(self, id: int) -> dict: #TODO parameter name check if valid
-        self.__initialize_collection()
+    def get_by_Id(self, id: int, collection_name: str) -> dict:
+        self.__initialize_collection(collection_name)
 
         try:
             print(f'Reading element with id : {id}')
@@ -54,13 +47,12 @@ class DBContextTempName:  # TODO change name so that its context like DonkeyDb
             if result:
                 return result
             else:
-                print(f'Could not find the record with id : {id}') # TODO should I return empty just for program not to crash ?
+                print(f'Could not find the record with id : {id}')
         except Exception as ex:
             print(f'Reading element from db was interrupted by : {str(ex)}')
 
-            
-    def get_all(self) -> List[dict]:  # TODO parameter name check if valid
-        self.__initialize_collection()
+    def get_all(self, collection_name: str) -> List[dict]:
+        self.__initialize_collection(collection_name)
 
         try:
             all_elements = self.__collection.find()
@@ -69,15 +61,15 @@ class DBContextTempName:  # TODO change name so that its context like DonkeyDb
             if result:
                 return result
             else:
-                print('Colelction is empty')  # TODO should I return empty just for program not to crash ?
+                print('Colelction is empty')
         except Exception as ex:
             print(f'Reading all documents from collection was interrupted by : {str(ex)}')
         finally:
             print(f'Successfuly read {len(result)} elements from the collection')
 
 
-    def drop_collection(self):
-        self.__initialize_collection()
+    def drop_collection(self, collection_name: str):
+        self.__initialize_collection(collection_name)
         
         try:
             print('Dropping collection')
@@ -86,3 +78,8 @@ class DBContextTempName:  # TODO change name so that its context like DonkeyDb
             print(f'Could not clear the collection due to {str(ex)}')
         finally:
             print('Dropping job done')
+
+    
+    def __initialize_collection(self, collection_name: str = AppSettings.COLLECTION_NAME):
+        print(f'Initializing the collection in DB. Collection name={collection_name}')
+        self.__collection = self.__db[collection_name]

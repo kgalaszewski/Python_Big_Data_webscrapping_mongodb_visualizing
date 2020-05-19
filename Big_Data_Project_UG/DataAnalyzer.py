@@ -9,6 +9,7 @@ class DataAnalyzer:
         if not values_collection:
             print('Collection can not be empty')
             return
+
         x_axis_collection = []
         y_axis_collection = []
 
@@ -28,6 +29,12 @@ class DataAnalyzer:
             x_name: pandas.Series(x_collection, index=[i for i in range(len(x_collection))]),
             y_name: pandas.Series(y_collection, index=[i for i in range(len(y_collection))])
         }
+        
         data_frame = pandas.DataFrame(multiple_series)
-        data_frame.plot(x=x_name, y=y_name, kind='bar', title=title)
+        data_frame.plot(x=x_name, y=y_name, kind='bar',title=title)
         plot.show()
+
+
+    # @classmethod
+    # def run_analyzed_data_charts(cls):
+    #     plot.show()

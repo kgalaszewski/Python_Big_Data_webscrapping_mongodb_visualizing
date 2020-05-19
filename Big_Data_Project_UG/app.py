@@ -1,35 +1,60 @@
 from WebScrapping import WebScrapper
 from AppSettings import AppSettings
 from DataAnalyzer import DataAnalyzer
+from Utils import Utils
+from MongoDbContext import DBContext
+import _thread
+import matplotlib.pyplot as plot
 
-# TODO squash commits wyjebka elo
 
-# kolekcja o nazwie drony
-# cana : liczba
+# drones = 'Drony'
+# gopros = 'GoPros'
 
-# kolekcja o nazwie gopro
-# cana : liczba
+# # 0 clear db
+# DBContext().drop_collection(drones)
+# DBContext().drop_collection(gopros)
 
-# 1 WEB SKRAPUJEMY
-# 2 ZAPISUJEMY DO BAZY
-# 3 ZCZYTUJEMY BO Wymagane
-# 4 Uzywamy na wykresiku
+# # 1 WEB SKRAPUJEMY
+# scrapper = WebScrapper()
+# drone_values = scrapper.read_product_info('Drone', 10)
+# gopro_values = scrapper.read_product_info('GoPro', 10)
 
-drony_ceny = [123, 23, 123, 22, 313]
-drony_popularnosc = [1223, 223, 44, 4, 4]
-lista_tupelkow = []
+# # 2 ZAPISUJEMY DO BAZY + Zczytujemy bo wymagane :=D :=D
+# cena = 'cena'
+# ilosc_transakcji = 'ilosc_transakcji'
 
-for i in range(len(drony_ceny) - 1):
-    lista_tupelkow.append((drony_ceny[i], drony_popularnosc[i]))
 
-print(lista_tupelkow)
+# drones_jsons = Utils.convert_to_json_pair_values(drone_values, cena, ilosc_transakcji)
+# gopros_jsons = Utils.convert_to_json_pair_values(gopro_values, cena, ilosc_transakcji)
 
-# multiple_series = {
-#     'cena': pandas.Series(drony_ceny, index=['1', '2', '2', '3', '4']),
-#     'ilosc_osob': pandas.Series(drony_popularnosc, index=['1', '2', '2', '3', '4'])
-# }
-# data_frame = pandas.DataFrame(multiple_series)
-# data_frame.plot(x='cena', y='ilosc_osob', kind='bar', title='Drony')
-# plot.show()
+# db_context = DBContext()
+# db_context.add_rows(drones_jsons, collection_name=drones)
+# drones_from_db = db_context.get_all(collection_name=drones)
 
-DataAnalyzer.analyze_data(lista_tupelkow, 'cena', 'ilosc_osob', 'dronne drony')
+# db_context2 = DBContext()
+# db_context2.add_rows(gopros_jsons, collection_name=gopros)
+# gopros_from_db = db_context2.get_all(collection_name=gopros)
+
+
+# # 4 Uzywamy na wykresiku
+# drones_list = Utils.convert_jsons_to_tuples(drones_from_db, cena, ilosc_transakcji)
+# gopros_list = Utils.convert_jsons_to_tuples(gopros_from_db, cena, ilosc_transakcji)
+# DataAnalyzer.analyze_data(drones_list, cena, ilosc_transakcji, drones)
+# DataAnalyzer.analyze_data(gopros_list, cena, ilosc_transakcji, gopros)
+
+
+import pandas
+multiple_series = {
+    'x_name': pandas.Series([1, 3], index=['a', 'b']),
+    'y_name': pandas.Series([2, 4], index=['a', 'b'])
+}
+multiple_series2 = {
+    'x_name': pandas.Series([3, 2], index=['a', 'b']),
+    'y_name': pandas.Series([1, 2], index=['a', 'b'])
+}
+data_frame = pandas.DataFrame(multiple_series)
+data_frame2 = pandas.DataFrame(multiple_series2)
+data_frame.plot(x='x_name', y='y_name', kind='bar', title='title', subplots=True)
+data_frame2.plot(x='x_name', y='y_name', kind='bar', title='title', subplots=True)
+plot.show()
+
